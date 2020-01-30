@@ -16,7 +16,6 @@ USAGE="Magento Cloud Docker
   ece-deploy        run deploy hooks
   ece-post-deploy   run post-deploy hooks
   ece-redeploy      run build, deploy, and post-deploy hooks
-  php71             run a command in a PHP 7.1 container
   php72             run a command in a PHP 7.2 container
   php73             run a command in a PHP 7.3 container
 
@@ -79,10 +78,6 @@ case "$1" in
         docker-compose run --rm build cloud-build
         docker-compose run --rm deploy cloud-deploy
         docker-compose run --rm deploy cloud-post-deploy
-        ;;
-    php71)
-        shift
-        php-container 7.1 "$@"
         ;;
     php72)
         shift

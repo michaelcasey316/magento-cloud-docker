@@ -16,9 +16,16 @@ USAGE="Magento Cloud Docker
   ece-deploy        run deploy hooks
   ece-post-deploy   run post-deploy hooks
   ece-redeploy      run build, deploy, and post-deploy hooks
+  php71             run a command in a PHP 7.1 container
+  php72             run a command in a PHP 7.2 container
+  php73             run a command in a PHP 7.3 container
 
 \033[33mOptions:\033[0m
-  -h            show this help text\n"
+  -h            show this help text
+
+\033[33mExample usage:\033[0m
+  bin/magento-docker start
+  bin/magento-docker php73 composer install\n"
 
 if [ ${#@} -ne 0 ]; then
     for arg in "$@"; do
@@ -28,6 +35,13 @@ if [ ${#@} -ne 0 ]; then
         fi
     done
 fi;
+
+php-container ()
+{
+    local version="$1"
+    shift
+    docker run --rm -it -e "MAGENTO_ROOT=/app" -v "$(pwd)":/app -v ~/.composer/cache:/root/.composer/cache "magento/magento-cloud-docker-php:${version}-cli" "$@"
+}
 
 case "$1" in
     pull)
@@ -65,6 +79,18 @@ case "$1" in
         docker-compose run --rm build cloud-build
         docker-compose run --rm deploy cloud-deploy
         docker-compose run --rm deploy cloud-post-deploy
+        ;;
+    php71)
+        shift
+        php-container 7.1 "$@"
+        ;;
+    php72)
+        shift
+        php-container 7.2 "$@"
+        ;;
+    php73)
+        shift
+        php-container 7.3 "$@"
         ;;
     *)
         printf "$USAGE"

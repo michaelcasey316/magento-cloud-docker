@@ -20,9 +20,13 @@ USAGE="Magento Cloud Docker
 \033[33mOptions:\033[0m
   -h            show this help text\n"
 
-if [ ${#@} -ne 0 ] && [ "${@#"-h"}" = "" ]; then
-    printf "$USAGE"
-    exit 0;
+if [ ${#@} -ne 0 ]; then
+    for arg in "$@"; do
+        if [ "${arg#"-h"}" = "" ]; then
+            printf "$USAGE"
+            exit 0;
+        fi
+    done
 fi;
 
 case "$1" in
